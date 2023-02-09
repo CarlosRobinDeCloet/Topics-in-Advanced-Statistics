@@ -1,4 +1,6 @@
 rm(list = ls())
+
+
 library(np)
 library(mgcv)
 
@@ -8,24 +10,24 @@ y = dataQ3$y
 x1 = dataQ3$x1
 x2 = dataQ3$x2
 
+SIM <- npindexbw(formula=y~x1+x2,method='ichimura')
 
-bw <- npindexbw(formula=y~x1+x2,method='ichimura')
-
-model <- npindex(bws=bw, gradients=TRUE)
+model <- npindex(bws=SIM, gradients=TRUE)
 summary(model)
 
-npplot(bws=bw)
+npplot(bws=SIM)
 curve(x^2,add=T,col='red',lty=2)
 
 
-##### GAM
-
+##### GAM #####
 c = ave(y)
 
 y = y - c
 
-m1 <- gam(y~s(x1)+s(x2), method = 'REML',
+GAM <- gam(y~s(x1)+s(x2), method = 'REML',
           family=gaussian(link = "identity"))
 
-gam.check(m1)
-plot(m1)
+gam.check(GAM)
+plot(GAM)
+
+
