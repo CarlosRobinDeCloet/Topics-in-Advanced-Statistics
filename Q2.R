@@ -6,13 +6,6 @@ x1 = dataQ2$x1
 x2 = dataQ2$x2
 y = dataQ2$y
 
-bandwidthMatrix = matrix(c(0.5,0,0,0.5),nrow=2,ncol=2)
-
-x1min = min(x1)
-x1max = max(x1)
-x2min = min(x2)
-x2max = max(x2)
-
 x1.seq = seq(-4, 3.99, 1/64)
 x2.seq = seq(-4, 3.99, 1/64)
 
@@ -29,7 +22,7 @@ f1xMatrix = matrix(0,nrow=512,ncol=512)
 
 for (i in 1:length(x1.seq)){
   for (j in 1:length(x2.seq)){
-    f1xMatrix[i,j] = kernel_density_estimator(x1.seq[i],x2.seq[j],0.5,dataY1$x1,dataY1$x2)
+    f1xMatrix[i,j] = kernel_density_estimator(x1.seq[i],x2.seq[j],h=0.5,dataY1$x1,dataY1$x2)
   }
   
   print(paste0('Current row is: ',i))
@@ -39,7 +32,7 @@ f0xMatrix = matrix(0,nrow=512,ncol=512)
 
 for (i in 1:length(x1.seq)){
   for (j in 1:length(x2.seq)){
-    f0xMatrix[i,j] = kernel_density_estimator(x1.seq[i],x2.seq[j],0.5,dataY0$x1,dataY0$x2)
+    f0xMatrix[i,j] = kernel_density_estimator(x1.seq[i],x2.seq[j],h=0.5,dataY0$x1,dataY0$x2)
   }
   
   print(paste0('Current row is: ',i))
@@ -48,9 +41,6 @@ for (i in 1:length(x1.seq)){
 p1x = f1xMatrix*prior1/(f1xMatrix*prior1+f0xMatrix*prior0)
 
 contour(x1.seq, x2.seq, p1x,main='Contour plot of p(x1,x2)',xlab='x1',ylab='x2')
-
-x1 = dataQ2$x1
-x2 = dataQ2$x2
 
 x1_bin = ceiling((x1 -(-4))/(4-(-4))*512)
 x2_bin = ceiling((x2 -(-4))/(4-(-4))*512)
