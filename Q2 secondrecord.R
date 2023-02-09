@@ -47,7 +47,7 @@ for (i in 1:length(x1.seq)){
 
 p1x = f1xMatrix*prior1/(f1xMatrix*prior1+f0xMatrix*prior0)
 
-contour(x1.seq, x2.seq, p1x,main='Contour plot of p(x1,x2)',xlab='x1',ylab='x2')
+contour(x1.seq, x2.seq, p1x)
 
 x1 = dataQ2$x1
 x2 = dataQ2$x2
