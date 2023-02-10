@@ -5,10 +5,10 @@ dataQ4 = read.csv("C:\\Users\\Carlos de Cloet\\Desktop\\Topics in Advanced Stati
 x = dataQ4$x
 y = dataQ4$y
 
-plot(x,y)
+plot(x,y,pch=19,col='grey',main='Plot of m_hat')
 
-k = 100 # k should be smaller than n
-h = 0.1
+k = 20 # k should be smaller than n
+h = 1
 n = length(x)
 
 calculate_m <- function(u){
@@ -35,7 +35,7 @@ calculate_m <- function(u){
   m_hi/m_lo
 }
 
-curve(sapply(x,calculate_m),add=T,col='red')
+curve(sapply(x,calculate_m),add=T,col='black',lw='2')
 
 leave_one_out_cv <- function(x, ind,k,h){
   
