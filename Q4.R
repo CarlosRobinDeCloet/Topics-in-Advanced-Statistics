@@ -21,18 +21,18 @@ calculate_m <- function(u){
     points[i,] = c(index, distance, absolute, x[i], y[i])
   }
   
-  closePoints <- points[order(points$absolute),][1:k,]
+  nearestNeighbours <- points[order(points$absolute),][1:k,]
   
-  m_hi = 0
-  m_lo = 0
+  numerator = 0
+  denominator = 0
   
   for(l in 1:k){
     
-    m_hi = m_hi + 1/h*(1/sqrt(2*pi)*exp(-1/2*(closePoints$distance[l]/h)^2)*closePoints$y[l])
-    m_lo = m_lo + 1/h*1/sqrt(2*pi)*exp(-1/2*(closePoints$distance[l]/h)^2)
+    numerator = numerator + 1/h*(1/sqrt(2*pi)*exp(-1/2*(nearestNeighbours$distance[l]/h)^2)*nearestNeighbours$y[l])
+    denominator = denominator + 1/h*1/sqrt(2*pi)*exp(-1/2*(nearestNeighbours$distance[l]/h)^2)
   }
   
-  m_hi/m_lo
+  numerator/denominator
 }
 
 curve(sapply(x,calculate_m),add=T,col='black',lw='2')
@@ -50,25 +50,25 @@ leave_one_out_cv <- function(x, ind,k,h){
     points[i,] <- c(index, distance, absolute, x_t[i], y_t[i])
     
   }
-  closePoints <- points[order(points$absolute),][1:k,]
+  nearestNeighbours <- points[order(points$absolute),][1:k,]
   
-  m_hi = 0
-  m_lo = 0
+  numerator = 0
+  denominator = 0
   
   for(l in 1:k) {
     
-    m_hi = m_hi + 1/h*(1/sqrt(2*pi)*exp(-1/2*(closePoints$distance[l]/h)^2)*closePoints$y[l])
-    m_lo = m_lo + 1/h*1/sqrt(2*pi)*exp(-1/2*(closePoints$distance[l]/h)^2)
+    numerator = numerator + 1/h*(1/sqrt(2*pi)*exp(-1/2*(nearestNeighbours$distance[l]/h)^2)*nearestNeighbours$y[l])
+    denominator = denominator + 1/h*1/sqrt(2*pi)*exp(-1/2*(nearestNeighbours$distance[l]/h)^2)
   }
   
-  y_hat = m_hi/m_lo
+  y_hat = numerator/denominator
   
   (y_hat-y[ind])^2
 }
 
-errorMatrix = matrix(0,nrow=50,ncol=200)
+ISEMatrix = matrix(0,nrow=50,ncol=200)
 
-k.seq <- seq(1,10,1)
+k.seq <- seq(1,50,1)
 h.seq <- seq(0.01,2,0.01)
 i.seq <- seq(1,100,1)
 
@@ -77,12 +77,12 @@ for(k in 1:length(k.seq)){
   print(paste0('K value is: ',k))
   
   for(h in 1:length(h.seq)){
-    MSE = 0
+    ISE = 0
     for(i in i.seq){
-      MSE = MSE + leave_one_out_cv(x,i,k.seq[k],h.seq[h])
+      ISE = ISE + leave_one_out_cv(x,i,k.seq[k],h.seq[h])
     }
-    MSE = MSE/99
-    errorMatrix[k,h] = MSE
+    ISE = ISE/99
+    ISEMatrix[k,h] = ISE
   }
 }
 
